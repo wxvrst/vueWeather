@@ -21,8 +21,7 @@ export default {
             return "Ощущается как: " + this.info.main.feels_like;
         },
         showClouds(){
-            return "На улице: " + this.info.weather[0].main;
-            
+            return this.info.weather[0].icon;
         },
     },
     methods: {
@@ -53,7 +52,7 @@ export default {
         <div v-if="info">
             <p>{{ showTemp }}</p>
             <p>{{ showFeelsLike }}</p>
-            <p>{{ showClouds }}</p>
+            <img :src="`https://openweathermap.org/img/wn/${showClouds}@2x.png`" alt="weather-icon"/>
         </div>
     </div>
 </template>
