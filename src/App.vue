@@ -25,15 +25,21 @@ export default {
         },
     },
     methods: {
-        getWeather() {
+        async getWeather() {
             if(this.city.trim().length < 2){
                 this.error= "Название должно содержать более одного символа!"
                 return false;
             }
             this.error= "";
             
-            axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${this.city}&units=metric&appid=e710110bffd69fd169bee812851e14ff`)
+            await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${this.city}&units=metric&appid=e710110bffd69fd169bee812851e14ff`)
                 .then(res => (this.info = res.data))
+                .then(data => {
+                    console.table(data);
+                })
+                .catch(error => {
+                    console.error('Ошибка при выполнении запроса: ', error);
+                })
         }
     }
 }
@@ -42,11 +48,13 @@ export default {
 <!--================================================Template================================================-->
 <template>
     <div class="wrapper">
-        <h1>Погодное приложение</h1>
+        <h1>Погода</h1>
         <p>Узнать погоду в {{ city === "" ? "Вашем городе" : cityName }}</p>
-        <input type="text" v-model="city" placeholder="Введите город">
-        <button v-if="city" v-on:click="getWeather()">Получить погоду</button>
-        <button disabled v-else>Введите название города</button>
+        <form id="search-form">
+            <input type="text" v-model="city" placeholder="Введите город">
+            <button type="button" v-if="city" v-on:click="getWeather()">Получить погоду</button>
+            <button type="button" disabled v-else>Введите название города</button>
+        </form>
         <p class="error">{{ error }}</p>
         
         <div v-if="info">
@@ -63,11 +71,12 @@ export default {
     color: #d03939;
 }
 .wrapper {
-    width: 900px;
-    height: 500px;
+    width: 600px;
+    height: 400px;
     border-radius: 50px;
     padding: 20px;
-    background: #1f0f24;
+    background: #1c2037;
+    border: 2px #000ab1 solid;
     text-align: center;
     color: white;
 }
@@ -82,7 +91,7 @@ export default {
 
 .wrapper input {
     margin-top: 30px;
-    background: #3e2047;
+    background: #262559;
     border: none;
     border-bottom: 2px solid #110813;
     border-radius: 5px;
@@ -93,15 +102,15 @@ export default {
 }
 
 .wrapper input:focus {
-    border-bottom-color: #9430af;
+    border-bottom-color: #3430af;
     transition: border-botton-color, 1000ms;
 }
 
 .wrapper button {
-    background: rgb(34, 193, 195, 1);
+    background: rgb(26, 107, 138);
     color: #ffffff;
     border-radius: 10px;
-    border: 2px solid rgb(0, 248, 255);
+    border: 2px solid rgb(17, 130, 200);
     padding: 10px 15px;
     margin-left: 20px;
     cursor: pointer;
@@ -109,7 +118,7 @@ export default {
 }
 
 .wrapper button:disabled {
-    background: rgb(19, 90, 94);
+    background: rgb(13, 48, 67);
     cursor: not-allowed;
 }
 
